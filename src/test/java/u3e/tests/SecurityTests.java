@@ -19,14 +19,14 @@ public class SecurityTests {
     
     @Test
     public void nullConstructorTest() {
-        assertThrows(
-            IllegalArgumentException.class,
-            () -> {
-                new AI(null);
-                new Human(null);
-                new Board(0, 0);
-            },
-            "Null parameters or 0 not allowed in constructor!"
-        );
+        assertThrows(IllegalArgumentException.class,
+                ()->new AI(null),
+                "Null parameter not allowed in AI constructor");
+        assertThrows(IllegalArgumentException.class,
+                ()->new Human(null),
+                "Null parameter is not allowed in Human constructor");
+        assertThrows(IllegalArgumentException.class,
+                ()->new Board(0, 0),
+                "0 size parameterz not allowed in Board parameter");
     }
 }
