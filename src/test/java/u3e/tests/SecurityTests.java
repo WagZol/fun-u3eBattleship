@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import u3e.battleship.AI;
 import u3e.battleship.Board;
 import u3e.battleship.Human;
+import u3e.battleship.Ship;
 
 /**
  *
@@ -21,12 +22,16 @@ public class SecurityTests {
     public void nullConstructorTest() {
         assertThrows(IllegalArgumentException.class,
                 ()->new AI(null),
-                "Null parameter not allowed in AI constructor");
+                "Null board parameter not allowed in AI constructor");
         assertThrows(IllegalArgumentException.class,
                 ()->new Human(null),
-                "Null parameter is not allowed in Human constructor");
+                "Null board parameter is not allowed in Human constructor");
         assertThrows(IllegalArgumentException.class,
                 ()->new Board(0, 0),
-                "0 size parameterz not allowed in Board parameter");
+                "0 size parameters not allowed in Board parameter");
+        assertThrows(IllegalArgumentException.class,
+                ()->new Ship(new Integer[0], new Integer[0]),
+                "Ships must have 1 coordinate");
+        
     }
 }
