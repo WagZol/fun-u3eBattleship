@@ -18,7 +18,8 @@ public class Ship {
     List yCoordinates;
     
     public Ship(Integer[] xCoordinates, Integer[] yCoordinates){
-        if (xCoordinates.length==0 || yCoordinates.length==0)
+        if (xCoordinates.length==0 || yCoordinates.length==0 ||
+                xCoordinates.length!=yCoordinates.length)
             throw new IllegalArgumentException();
         this.xCoordinates=new ArrayList<>(Arrays.asList(xCoordinates));
         this.yCoordinates=new ArrayList<>(Arrays.asList(yCoordinates));

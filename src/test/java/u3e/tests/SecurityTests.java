@@ -34,4 +34,12 @@ public class SecurityTests {
                 "Ships must have 1 coordinate");
         
     }
+    
+    @Test
+    public void shipCoorectCoordinateFormatTest() {
+        assertThrows(IllegalArgumentException.class,
+                ()->new Ship(new Integer[1], new Integer[0]),
+                "Ships must have equal amount x and y coordinates");
+    }
+    
 }
