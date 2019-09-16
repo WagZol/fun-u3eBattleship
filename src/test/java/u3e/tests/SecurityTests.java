@@ -5,6 +5,7 @@
  */
 package u3e.tests;
 
+import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 import u3e.battleship.AI;
@@ -30,16 +31,24 @@ public class SecurityTests {
                 ()->new Board(0, 0),
                 "0 size parameters not allowed in Board parameter");
         assertThrows(IllegalArgumentException.class,
-                ()->new Ship(new Integer[0], new Integer[0]),
+                ()->new Ship(new ArrayList<>()),
                 "Ships must have 1 coordinate");
-        
+        assertThrows(IllegalArgumentException.class,
+                ()->new Board(null),
+                "Custom board in Board constructor cannot be null");
+        assertThrows(IllegalArgumentException.class,
+                ()->new Board(new String[0][0]),
+                "Custom board in Board constructor cannot be empty");
     }
     
     @Test
     public void shipCoorectCoordinateFormatTest() {
         assertThrows(IllegalArgumentException.class,
-                ()->new Ship(new Integer[1], new Integer[0]),
-                "Ships must have equal amount x and y coordinates");
+                ()->{ArrayList<int[]> wrongCoordinates=new ArrayList<>();
+                     wrongCoordinates.add(new int[3]);
+                     new Ship(wrongCoordinates); 
+                },
+                "Ships must have only x and y coordinates");
     }
     
 }

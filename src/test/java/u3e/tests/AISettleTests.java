@@ -5,6 +5,8 @@
  */
 package u3e.tests;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.Assertions;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -20,14 +22,34 @@ import u3e.battleship.Ship;
  * @author wagnerz
  */
 public class AISettleTests {
+
     @Test
-    public void NoMoreSpaceForShipToSettle(){
-        Board standardBoard=new Board(1,1);
-        assertTrue("AI cannot settle ships out of Board", 
+    public void noMoreSpaceForShipToSettle() {
+        Board standardBoard = new Board(1, 1);
+        assertTrue("AI cannot settle ships out of Board",
                 standardBoard.isShipNotMacthingToBoard(new Ship(
-                new Integer[]{1,1}, new Integer[]{1,2})));
-        assertFalse("Ship is fit in the Board", 
+                        new ArrayList<>(Arrays.asList(new int[]{1, 1}, new int[]{1, 2})))));
+        assertFalse("Ship is fit in the Board",
                 standardBoard.isShipNotMacthingToBoard(new Ship(
-                new Integer[]{1}, new Integer[]{1})));
+                        new ArrayList<>(Arrays.asList(new int[]{1, 1})))));
     }
+
+    @Test
+    public void shipCollosionWithOtherShip() {
+        Board standardBoard = new Board(new String[][]{{"A1", "A1"}, {" ", " "}});
+        System.out.println(standardBoard);
+        assertTrue("AI cannot settle ships if other ship in its way",
+                standardBoard.isShipCollosingWithOtherShips(new Ship(
+                        new ArrayList<>(Arrays
+                                .asList(new int[]{1, 0}, new int[]{1, 1})))));
+
+        standardBoard = new Board(new String[][]{{"A1", "A1", " "}, 
+            {" ", " " , " "}, {" ", " ", " "}});
+        assertFalse("Ship is fit if there is enough space for itself and "
+                + "the one coordinate wide aura",
+                standardBoard.isShipCollosingWithOtherShips(new Ship(
+                        new ArrayList<>(Arrays
+                                .asList(new int[]{2, 0}, new int[]{2, 1})))));
+    }
+
 }

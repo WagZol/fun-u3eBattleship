@@ -14,15 +14,21 @@ import java.util.List;
  * @author wagnerz
  */
 public class Ship {
-    List xCoordinates;
-    List yCoordinates;
+    private List<int[]> coordinates;
     
-    public Ship(Integer[] xCoordinates, Integer[] yCoordinates){
-        if (xCoordinates.length==0 || yCoordinates.length==0 ||
-                xCoordinates.length!=yCoordinates.length)
+    public Ship(List<int[]> coordinates){
+        if (coordinates.size()==0 || 
+                coordinates.stream().anyMatch(n->n.length!=2))
             throw new IllegalArgumentException();
-        this.xCoordinates=new ArrayList<>(Arrays.asList(xCoordinates));
-        this.yCoordinates=new ArrayList<>(Arrays.asList(yCoordinates));
+        this.coordinates=coordinates;
     }
+
+    public Ship() {}
+    
+    public List<int[]> getCoordinates(){
+        return this.coordinates;
+    }
+    
+    
     
 }
