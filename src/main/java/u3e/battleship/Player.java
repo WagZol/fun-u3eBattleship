@@ -11,11 +11,11 @@ package u3e.battleship;
  */
 public abstract class Player {
     private Board board;
-    
+
     public Player(Board board) {
-        if (board==null)
+        if (board == null) {
             throw new IllegalArgumentException();
-        this.board=board;
+        }
+        this.board = board;
     }
-    
 }
