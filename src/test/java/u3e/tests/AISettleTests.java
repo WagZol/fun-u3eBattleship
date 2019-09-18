@@ -56,24 +56,20 @@ public class AISettleTests {
     public void rotateShip() {
         Ship testShip = new Ship(new ArrayList<>(Arrays
                 .asList(new int[]{0, 0}, new int[]{0, 1}, new int[]{0, 2})));
-        testShip.turnDown().stream().forEach((int[] coordinate) -> {
-            System.out.println(coordinate[0] + ", " + coordinate[1]);
-        });
-        assertTrue(Arrays.equals(testShip.turnDown().get(0), new int[]{0, 0}));
-        assertTrue(Arrays.equals(testShip.turnDown().get(1), new int[]{1, 0}));
-        assertTrue(Arrays.equals(testShip.turnDown().get(2), new int[]{2, 0}));
-        
-        assertTrue(Arrays.equals(testShip.turnUp().get(0), new int[]{0, 0}));
-        assertTrue(Arrays.equals(testShip.turnUp().get(1), new int[]{-1, 0}));
-        assertTrue(Arrays.equals(testShip.turnUp().get(2), new int[]{-2, 0}));
-        
-        assertTrue(Arrays.equals(testShip.turnRight().get(0), new int[]{0, 0}));
-        assertTrue(Arrays.equals(testShip.turnRight().get(1), new int[]{0,-1}));
-        assertTrue(Arrays.equals(testShip.turnRight().get(2), new int[]{0,-2}));
-        
-        assertTrue(Arrays.equals(testShip.turnLeft().get(0), new int[]{0, 0}));
-        assertTrue(Arrays.equals(testShip.turnLeft().get(1), new int[]{0, 1}));
-        assertTrue(Arrays.equals(testShip.turnLeft().get(2), new int[]{0, 2}));
+  
+        for (int stepIndex = 0; stepIndex < 3; stepIndex++) {
+            assertTrue("Ship turn left" 
+                    ,Arrays.equals(testShip.turnLeft().getActualCoordinates()
+                    .get(stepIndex), new int[]{0, stepIndex}));
+            assertTrue("Ship turn right", 
+                    Arrays.equals(testShip.turnRight().getActualCoordinates()
+                    .get(stepIndex), new int[]{0, stepIndex * -1}));
+            assertTrue("Ship turn down",
+                    Arrays.equals(testShip.turnDown().getActualCoordinates()
+                    .get(stepIndex), new int[]{stepIndex, 0}));
+            assertTrue("Ship turn up", 
+                    Arrays.equals(testShip.turnUp().getActualCoordinates()
+                    .get(stepIndex), new int[]{stepIndex * -1, 0}));
+        }
     }
-
 }
