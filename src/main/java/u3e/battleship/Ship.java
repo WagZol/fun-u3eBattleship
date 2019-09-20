@@ -17,73 +17,101 @@ import java.util.stream.Collectors;
  */
 public class Ship {
 
-    private List<int[]> coordinates;
+    private List<int[]> sampleCoordinates;
+    private List<int[]> actualCoordinates;
+    private String symbol;
 
-    public Ship(List<int[]> coordinates) {
-        if (coordinates.size() == 0
-                || coordinates.stream().anyMatch(n -> n.length != 2)) {
+    public Ship(List<int[]> sampleCoordinates, String shipSymbol) {
+        if (sampleCoordinates.size() == 0
+                || sampleCoordinates.stream().anyMatch(n -> n.length != 2) 
+                || shipSymbol==null
+                || shipSymbol.equals(Board.getEmptyCoordinate())) {
             throw new IllegalArgumentException();
         }
-        this.coordinates = coordinates;
+        this.sampleCoordinates = sampleCoordinates;
+        this.actualCoordinates = sampleCoordinates;
+        this.symbol=shipSymbol;
     }
 
     public Ship() {
     }
 
-    public List<int[]> getCoordinates() {
-        return this.coordinates;
+    public List<int[]> getActualCoordinates() {
+        return this.actualCoordinates;
     }
 
-    public void setCoordinates(List<int[]> changedCoordinates) {
-        this.coordinates = changedCoordinates;
+    public void setActualCoordinates(List<int[]> changedCoordinates) {
+        this.actualCoordinates = changedCoordinates;
     }
 
-    public List<int[]> turnLeft() {
-        return this.coordinates;
+    public Ship turnLeft() {
+        actualCoordinates = sampleCoordinates;
+        return this;
     }
 
-    public List<int[]> turnRight() {
-        int[] shipSampleFirstCoordinate=this.getCoordinates().get(0);
-        
-        return this.coordinates.stream().map((int[] shipCoordinate) -> {
-            int[] distanceFromFirstCoordinate = new int[]{
-                abs(shipSampleFirstCoordinate[0] - shipCoordinate[0]),
-                abs(shipSampleFirstCoordinate[1] - shipCoordinate[1])
-            };
-            return new int[]{
-                shipSampleFirstCoordinate[0] - distanceFromFirstCoordinate[0],
-                shipSampleFirstCoordinate[1] - distanceFromFirstCoordinate[1]
-            };
-        }).collect(Collectors.toList());
+    public Ship turnRight() {
+        int[] shipSampleFirstCoordinate = sampleCoordinates.get(0);
+
+        actualCoordinates = this.sampleCoordinates.stream()
+                .map((int[] shipCoordinate) -> {
+                    int[] distanceFromFirstCoordinate = new int[]{
+                        abs(shipSampleFirstCoordinate[0] - shipCoordinate[0]),
+                        abs(shipSampleFirstCoordinate[1] - shipCoordinate[1])
+                    };
+                    return new int[]{
+                        shipSampleFirstCoordinate[0] - distanceFromFirstCoordinate[0],
+                        shipSampleFirstCoordinate[1] - distanceFromFirstCoordinate[1]
+                    };
+                }).collect(Collectors.toList());
+        return this;
+    }
+
+    public Ship turnUp() {
+        int[] shipSampleFirstCoordinate = this.sampleCoordinates.get(0);
+
+        actualCoordinates = this.sampleCoordinates.stream()
+                .map((int[] shipCoordinate) -> {
+                    int[] distanceFromFirstCoordinate = new int[]{
+                        abs(shipSampleFirstCoordinate[0] - shipCoordinate[0]),
+                        abs(shipSampleFirstCoordinate[1] - shipCoordinate[1])
+                    };
+                    return new int[]{
+                        shipSampleFirstCoordinate[0] - distanceFromFirstCoordinate[1],
+                        shipSampleFirstCoordinate[1] + distanceFromFirstCoordinate[0]
+                    };
+                }).collect(Collectors.toList());
+        return this;
+    }
+
+    public Ship turnDown() {
+        int[] shipSampleFirstCoordinate = this.sampleCoordinates.get(0);
+
+        actualCoordinates = this.sampleCoordinates.stream()
+                .map((int[] shipCoordinate) -> {
+                    int[] distanceFromFirstCoordinate = new int[]{
+                        abs(shipSampleFirstCoordinate[0] - shipCoordinate[0]),
+                        abs(shipSampleFirstCoordinate[1] - shipCoordinate[1])
+                    };
+                    return new int[]{
+                        shipSampleFirstCoordinate[0] + distanceFromFirstCoordinate[1],
+                        shipSampleFirstCoordinate[1] - distanceFromFirstCoordinate[0]
+                    };
+                }).collect(Collectors.toList());
+        return this;
+    }
+
+    public Ship shiftShipToCursor(int[] cursor) {
+        int[] distance = new int[]{cursor[0] - sampleCoordinates.get(0)[0],
+            cursor[1] - sampleCoordinates.get(0)[0]};
+        actualCoordinates = sampleCoordinates.stream()
+                .map((int[] coordinate) -> {
+                    return new int[]{coordinate[0]
+                        + distance[0], coordinate[1] + distance[1]};
+                }).collect(Collectors.toList());
+        return this;
     }
     
-    public List<int[]> turnUp() {
-        int[] shipSampleFirstCoordinate=this.getCoordinates().get(0);
-        
-        return this.coordinates.stream().map((int[] shipCoordinate) -> {
-            int[] distanceFromFirstCoordinate = new int[]{
-                abs(shipSampleFirstCoordinate[0] - shipCoordinate[0]),
-                abs(shipSampleFirstCoordinate[1] - shipCoordinate[1])
-            };
-            return new int[]{
-                shipSampleFirstCoordinate[0] - distanceFromFirstCoordinate[1],
-                shipSampleFirstCoordinate[1] + distanceFromFirstCoordinate[0]
-            };
-        }).collect(Collectors.toList());
-    }
-
-    public List<int[]> turnDown() {
-        int[] shipSampleFirstCoordinate=this.getCoordinates().get(0);
-        
-        return this.coordinates.stream().map((int[] shipCoordinate) -> {
-            int[] distanceFromFirstCoordinate = new int[]{
-                abs(shipSampleFirstCoordinate[0] - shipCoordinate[0]),
-                abs(shipSampleFirstCoordinate[1] - shipCoordinate[1])
-            };
-            return new int[]{
-                shipSampleFirstCoordinate[0] + distanceFromFirstCoordinate[1],
-                shipSampleFirstCoordinate[1] - distanceFromFirstCoordinate[0]
-            };
-        }).collect(Collectors.toList());
+    public String getShipSymbol(){
+        return this.symbol;
     }
 }

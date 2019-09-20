@@ -11,11 +11,16 @@ package u3e.battleship;
  */
 public abstract class Player {
     private Board board;
+    private int[] cursor;
 
     public Player(Board board) {
         if (board == null) {
             throw new IllegalArgumentException();
         }
         this.board = board;
+    }
+    
+    public int[] getCursor(){
+        return cursor;
     }
 }

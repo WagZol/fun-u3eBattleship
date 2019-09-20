@@ -31,7 +31,13 @@ public class SecurityTests {
                 ()->new Board(0, 0),
                 "0 size parameters not allowed in Board parameter");
         assertThrows(IllegalArgumentException.class,
-                ()->new Ship(new ArrayList<>()),
+                ()->new Ship(new ArrayList<>(), "x"),
+                "Ships must have 1 coordinate");
+        assertThrows(IllegalArgumentException.class,
+                ()->new Ship(new ArrayList<>(), null),
+                "Ships must have 1 coordinate");
+        assertThrows(IllegalArgumentException.class,
+                ()->new Ship(new ArrayList<>(), " "),
                 "Ships must have 1 coordinate");
         assertThrows(IllegalArgumentException.class,
                 ()->new Board(null),
@@ -46,7 +52,7 @@ public class SecurityTests {
         assertThrows(IllegalArgumentException.class,
                 ()->{ArrayList<int[]> wrongCoordinates=new ArrayList<>();
                      wrongCoordinates.add(new int[3]);
-                     new Ship(wrongCoordinates); 
+                     new Ship(wrongCoordinates, "x"); 
                 },
                 "Ships must have only x and y coordinates");
     }

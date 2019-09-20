@@ -19,15 +19,18 @@ public class Board {
     private String[][] battleField;
     private int width;
     private int height;
-    private final String EMPTY_COORDINATE = " ";
+    private static final String EMPTY_COORDINATE = " ";
+    private List<int[]> emptyCoordinates;
 
     public Board(int width, int height) {
         if (width == 0 || height == 0) {
             throw new IllegalArgumentException();
         }
+        this.battleField = new String[width][height];
         this.height = height;
         this.width = width;
-        this.battleField = new String[width][height];
+        initEmptyCoordinates();
+
     }
 
     public Board(String[][] battleField) {
@@ -38,33 +41,25 @@ public class Board {
         this.battleField = battleField;
         this.width = battleField.length;
         this.height = battleField[0].length;
+        initEmptyCoordinates();
     }
 
-    public boolean isShipNotMacthingToBoard(Ship shipToCheck) {
-        return shipToCheck.getCoordinates().stream()
-                .anyMatch((int[] n) -> n[0] < 0 || n[0] > this.height
-                || n[1] < 0 || n[1] > this.width);
+    public static String getEmptyCoordinate() {
+        return EMPTY_COORDINATE;
     }
-
-    public boolean isShipCollosingWithOtherShips(Ship shipToCheck) {
-        return !(getShipCoordinateWithAura(shipToCheck).stream()
-                .allMatch((int[] n) -> {
-                    return this.battleField[n[0]][n[1]].equals(EMPTY_COORDINATE);
-                }));
-    }
-
-    private List<int[]> getShipCoordinateWithAura(Ship originalShip) {
+    
+    private List<int[]> getCoordinatesWithAura(List<int[]> coordinate) {
         List coordinatesWithAura = new ArrayList<>();
-        coordinatesWithAura.addAll(originalShip.getCoordinates());
+        coordinatesWithAura.addAll(coordinate);
 
-        originalShip.getCoordinates().stream().forEach((int[] n) -> {
+        coordinate.stream().forEach((int[] n) -> {
             for (int diffXIndex = -1; diffXIndex <= 1; diffXIndex++) {
                 for (int diffYIndex = -1; diffYIndex <= 1; diffYIndex++) {
                     int[] possibleAuraCoordinate = new int[]{n[0] + diffXIndex,
                         n[1] + diffYIndex};
 
                     if (!(isCoordinateInList(possibleAuraCoordinate,
-                             coordinatesWithAura))
+                            coordinatesWithAura))
                             && auraCoordinateIsInBoard(possibleAuraCoordinate)) {
                         coordinatesWithAura.add(possibleAuraCoordinate);
                     }
@@ -82,7 +77,23 @@ public class Board {
     private boolean isCoordinateInList(int[] coordinateToTest,
             List<int[]> coordinateList) {
         return coordinateList.stream().anyMatch((int[] coordinate) -> {
-            return Arrays.equals(coordinate, (int[])coordinateToTest);
+            return Arrays.equals(coordinate, (int[]) coordinateToTest);
+        });
+    }
+
+    private void removeCoordinatesFormList(List<int[]> coordinates,
+            List<int[]> list) {
+        coordinates.stream().forEach((int[] coordinate) -> {
+            list.removeIf((int[] emptyCoordinate) -> {
+                return Arrays.equals(emptyCoordinate, coordinate);
+            });
+        });
+    }
+
+    private void addCoordinatesToBoard(List<int[]> coordinates,
+            String shipSymbol) {
+        coordinates.stream().forEach((int[] coordinate) -> {
+            battleField[coordinate[0]][coordinate[1]] = shipSymbol;
         });
     }
 
@@ -95,5 +106,51 @@ public class Board {
             battlefieldString.concat("\n");
         });
         return battlefieldString;
+    }
+
+    public int getHeight() {
+        return this.height;
+    }
+
+    public int getWidth() {
+        return this.width;
+    }
+
+    private void initEmptyCoordinates() {
+        emptyCoordinates = new ArrayList<>();
+        List<int[]> filledCoordinate = new ArrayList<>();
+
+        for (int yCoordinate = 0; yCoordinate < this.height; yCoordinate++) {
+            for (int xCoordinate = 0; xCoordinate < this.width; xCoordinate++) {
+                if ((battleField[xCoordinate][yCoordinate] == null)
+                        || (battleField[xCoordinate][yCoordinate]
+                                .equals(EMPTY_COORDINATE))) {
+                    emptyCoordinates.add(new int[]{xCoordinate, yCoordinate});
+                    continue;
+                }
+                filledCoordinate.add(new int[]{xCoordinate, yCoordinate});
+            };
+        }
+
+        removeCoordinatesFormList(getCoordinatesWithAura(filledCoordinate),
+                emptyCoordinates);
+
+    }
+
+    public boolean settleShip(Ship shipToSettle) {
+
+        ArrayList<int[]> coordinatesOfShipToSettle
+                = (ArrayList<int[]>) shipToSettle.getActualCoordinates();
+        if (coordinatesOfShipToSettle.stream()
+                .allMatch((int[] shipCoordinate) -> {
+                    return isCoordinateInList(shipCoordinate, emptyCoordinates);
+                })) {
+            removeCoordinatesFormList(coordinatesOfShipToSettle,
+                    emptyCoordinates);
+            addCoordinatesToBoard(coordinatesOfShipToSettle,
+                     shipToSettle.getShipSymbol());
+            return true;
+        }
+        return false;
     }
 }

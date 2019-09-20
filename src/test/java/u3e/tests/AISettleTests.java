@@ -26,50 +26,56 @@ public class AISettleTests {
     @Test
     public void noMoreSpaceForShipToSettle() {
         Board standardBoard = new Board(1, 1);
-        assertTrue("AI cannot settle ships out of Board",
-                standardBoard.isShipNotMacthingToBoard(new Ship(
-                        new ArrayList<>(Arrays.asList(new int[]{1, 1}, new int[]{1, 2})))));
+        assertFalse("AI cannot settle ships out of Board",
+                standardBoard.settleShip(new Ship(
+                        new ArrayList<>(Arrays.asList(new int[]{1, 1},
+                                new int[]{1, 2})),
+                        "x")));
         assertFalse("Ship is fit in the Board",
-                standardBoard.isShipNotMacthingToBoard(new Ship(
-                        new ArrayList<>(Arrays.asList(new int[]{1, 1})))));
+                standardBoard.settleShip(new Ship(
+                        new ArrayList<>(Arrays.asList(new int[]{1, 1})),
+                        "x")));
     }
 
     @Test
     public void shipCollosionWithOtherShip() {
-        Board standardBoard = new Board(new String[][]{{"A1", "A1"}, {" ", " "}});
-        System.out.println(standardBoard);
-        assertTrue("AI cannot settle ships if other ship in its way",
-                standardBoard.isShipCollosingWithOtherShips(new Ship(
+        Board standardBoard = new Board(new String[][]{{"A1", "A1"},
+            {" ", " "}});
+        assertFalse("AI cannot settle ships if other ship in its way",
+                standardBoard.settleShip(new Ship(
                         new ArrayList<>(Arrays
-                                .asList(new int[]{1, 0}, new int[]{1, 1})))));
+                                .asList(new int[]{1, 0}, new int[]{1, 1})),
+                        "x")));
 
         standardBoard = new Board(new String[][]{{"A1", "A1", " "},
         {" ", " ", " "}, {" ", " ", " "}});
-        assertFalse("Ship is fit if there is enough space for itself and "
+        assertTrue("Ship is fit if there is enough space for itself and "
                 + "the one coordinate wide aura",
-                standardBoard.isShipCollosingWithOtherShips(new Ship(
+                standardBoard.settleShip(new Ship(
                         new ArrayList<>(Arrays
-                                .asList(new int[]{2, 0}, new int[]{2, 1})))));
+                                .asList(new int[]{2, 0}, new int[]{2, 1})),
+                        "x")));
     }
 
     @Test
     public void rotateShip() {
         Ship testShip = new Ship(new ArrayList<>(Arrays
-                .asList(new int[]{0, 0}, new int[]{0, 1}, new int[]{0, 2})));
-  
+                .asList(new int[]{0, 0}, new int[]{0, 1}, new int[]{0, 2})),
+                "x");
+
         for (int stepIndex = 0; stepIndex < 3; stepIndex++) {
-            assertTrue("Ship turn left" 
-                    ,Arrays.equals(testShip.turnLeft().getActualCoordinates()
-                    .get(stepIndex), new int[]{0, stepIndex}));
-            assertTrue("Ship turn right", 
+            assertTrue("Ship turn left",
+                    Arrays.equals(testShip.turnLeft().getActualCoordinates()
+                            .get(stepIndex), new int[]{0, stepIndex}));
+            assertTrue("Ship turn right",
                     Arrays.equals(testShip.turnRight().getActualCoordinates()
-                    .get(stepIndex), new int[]{0, stepIndex * -1}));
+                            .get(stepIndex), new int[]{0, stepIndex * -1}));
             assertTrue("Ship turn down",
                     Arrays.equals(testShip.turnDown().getActualCoordinates()
-                    .get(stepIndex), new int[]{stepIndex, 0}));
-            assertTrue("Ship turn up", 
+                            .get(stepIndex), new int[]{stepIndex, 0}));
+            assertTrue("Ship turn up",
                     Arrays.equals(testShip.turnUp().getActualCoordinates()
-                    .get(stepIndex), new int[]{stepIndex * -1, 0}));
+                            .get(stepIndex), new int[]{stepIndex * -1, 0}));
         }
     }
 }
