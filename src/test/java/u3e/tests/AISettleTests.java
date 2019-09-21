@@ -65,16 +65,16 @@ public class AISettleTests {
 
         for (int stepIndex = 0; stepIndex < 3; stepIndex++) {
             assertTrue("Ship turn left",
-                    Arrays.equals(testShip.turnLeft().getActualCoordinates()
+                    Arrays.equals(testShip.turnLeft().getCoordinates()
                             .get(stepIndex), new int[]{0, stepIndex}));
             assertTrue("Ship turn right",
-                    Arrays.equals(testShip.turnRight().getActualCoordinates()
+                    Arrays.equals(testShip.turnRight().getCoordinates()
                             .get(stepIndex), new int[]{0, stepIndex * -1}));
             assertTrue("Ship turn down",
-                    Arrays.equals(testShip.turnDown().getActualCoordinates()
+                    Arrays.equals(testShip.turnDown().getCoordinates()
                             .get(stepIndex), new int[]{stepIndex, 0}));
             assertTrue("Ship turn up",
-                    Arrays.equals(testShip.turnUp().getActualCoordinates()
+                    Arrays.equals(testShip.turnUp().getCoordinates()
                             .get(stepIndex), new int[]{stepIndex * -1, 0}));
         }
     }

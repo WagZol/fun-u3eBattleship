@@ -22,19 +22,24 @@ public class AI extends Player {
         super(board);
     }
 
-    /*public void setCursor() {
+    public void setCursor() {
         ArrayList<int[]> emptyCoordinates
                 = (ArrayList<int[]>) this.board.getEmptyCoordinates();
         int randomIndex = randomGenerator.nextInt(emptyCoordinates.size());
         cursor = emptyCoordinates.get(randomIndex);
-    }*/
+    }
 
     /*public Ship settleShip(Ship shipSample) {
         setCursor();
         Ship shiftedShip=shipSample.shiftShipToCursor(cursor);
         
-    }*/
+    }
     
-    //public chooseDirections()
-
+    public Ship chooseDirections(Ship shiftedShip){
+        ArrayList<Ship> allowedDirections=new ArrayList<>();
+        for (int turn=0;turn<4;turn++){
+            shiftedShip.turnLeft();
+        }
+    }
+*/
 }

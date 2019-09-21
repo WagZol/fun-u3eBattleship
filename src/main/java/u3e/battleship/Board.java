@@ -7,8 +7,8 @@ package u3e.battleship;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import u3e.utils.ListOfArrays;
 
 /**
  *
@@ -47,7 +47,11 @@ public class Board {
     public static String getEmptyCoordinate() {
         return EMPTY_COORDINATE;
     }
-    
+
+    public List<int[]> getEmptyCoordinates() {
+        return emptyCoordinates;
+    }
+
     private List<int[]> getCoordinatesWithAura(List<int[]> coordinate) {
         List coordinatesWithAura = new ArrayList<>();
         coordinatesWithAura.addAll(coordinate);
@@ -58,7 +62,8 @@ public class Board {
                     int[] possibleAuraCoordinate = new int[]{n[0] + diffXIndex,
                         n[1] + diffYIndex};
 
-                    if (!(isCoordinateInList(possibleAuraCoordinate,
+                    if (!(ListOfArrays.isArrayInListOfArray(
+                            possibleAuraCoordinate,
                             coordinatesWithAura))
                             && auraCoordinateIsInBoard(possibleAuraCoordinate)) {
                         coordinatesWithAura.add(possibleAuraCoordinate);
@@ -72,13 +77,6 @@ public class Board {
     private boolean auraCoordinateIsInBoard(int[] coordinate) {
         return coordinate[0] >= 0 && coordinate[0] < this.width
                 && coordinate[1] >= 0 && coordinate[1] < this.height;
-    }
-
-    private boolean isCoordinateInList(int[] coordinateToTest,
-            List<int[]> coordinateList) {
-        return coordinateList.stream().anyMatch((int[] coordinate) -> {
-            return Arrays.equals(coordinate, (int[]) coordinateToTest);
-        });
     }
 
     private void removeCoordinatesFormList(List<int[]> coordinates,
@@ -131,7 +129,6 @@ public class Board {
                 filledCoordinate.add(new int[]{xCoordinate, yCoordinate});
             };
         }
-
         removeCoordinatesFormList(getCoordinatesWithAura(filledCoordinate),
                 emptyCoordinates);
 
@@ -140,15 +137,14 @@ public class Board {
     public boolean settleShip(Ship shipToSettle) {
 
         ArrayList<int[]> coordinatesOfShipToSettle
-                = (ArrayList<int[]>) shipToSettle.getActualCoordinates();
-        if (coordinatesOfShipToSettle.stream()
-                .allMatch((int[] shipCoordinate) -> {
-                    return isCoordinateInList(shipCoordinate, emptyCoordinates);
-                })) {
+                = (ArrayList<int[]>) shipToSettle.getCoordinates();
+        
+        if (ListOfArrays.isListOfArrayInListOfArray(coordinatesOfShipToSettle,
+                emptyCoordinates)) {
             removeCoordinatesFormList(coordinatesOfShipToSettle,
                     emptyCoordinates);
             addCoordinatesToBoard(coordinatesOfShipToSettle,
-                     shipToSettle.getShipSymbol());
+                    shipToSettle.getShipSymbol());
             return true;
         }
         return false;
