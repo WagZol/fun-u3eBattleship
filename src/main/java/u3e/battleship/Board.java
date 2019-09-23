@@ -97,12 +97,12 @@ public class Board {
 
     public String toString() {
         String battlefieldString = "";
-        Arrays.asList(battleField).stream().forEach((String[] coordinateRaw) -> {
-            Arrays.asList(coordinateRaw).stream().forEach((String coordinate) -> {
-                battlefieldString.concat(coordinate);
-            });
-            battlefieldString.concat("\n");
-        });
+        for (String[] raws : battleField) {
+            for (String symbol : raws) {
+                battlefieldString += symbol;
+            }
+            battlefieldString += "\n";
+        }
         return battlefieldString;
     }
 
@@ -134,13 +134,18 @@ public class Board {
 
     }
 
+    public boolean isShipFit(Ship shipToTest) {
+        return ListOfArrays.isListOfArrayInListOfArray(shipToTest
+                .getCoordinates(),
+                emptyCoordinates);
+    }
+
     public boolean settleShip(Ship shipToSettle) {
 
         ArrayList<int[]> coordinatesOfShipToSettle
                 = (ArrayList<int[]>) shipToSettle.getCoordinates();
-        
-        if (ListOfArrays.isListOfArrayInListOfArray(coordinatesOfShipToSettle,
-                emptyCoordinates)) {
+
+        if (isShipFit(shipToSettle)) {
             removeCoordinatesFormList(coordinatesOfShipToSettle,
                     emptyCoordinates);
             addCoordinatesToBoard(coordinatesOfShipToSettle,

@@ -14,5 +14,10 @@ public class Human extends Player{
     public Human(Board board) {
         super(board);
     }
+
+    @Override
+    public void settleShip(Ship shipSample) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

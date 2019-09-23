@@ -10,10 +10,11 @@ package u3e.battleship;
  * @author Zoltán
  */
 public abstract class Player {
-    private Board board;
-    private int[] cursor;
+    protected Board board;
+    protected int[] cursor;
 
     public Player(Board board) {
+        
         if (board == null) {
             throw new IllegalArgumentException();
         }
@@ -23,4 +24,6 @@ public abstract class Player {
     public int[] getCursor(){
         return cursor;
     }
+    
+    public abstract void settleShip(Ship shipSample);
 }

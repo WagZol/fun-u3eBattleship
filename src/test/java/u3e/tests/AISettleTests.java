@@ -8,12 +8,9 @@ package u3e.tests;
 import java.util.ArrayList;
 import java.util.Arrays;
 import static org.junit.Assert.*;
-import org.junit.jupiter.api.Assertions;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 import u3e.battleship.AI;
 import u3e.battleship.Board;
-import u3e.battleship.Human;
 import u3e.battleship.Player;
 import u3e.battleship.Ship;
 
@@ -29,7 +26,7 @@ public class AISettleTests {
         assertFalse("AI cannot settle ships out of Board",
                 standardBoard.settleShip(new Ship(
                         new ArrayList<>(Arrays.asList(new int[]{1, 1},
-                                new int[]{1, 2})),
+                        new int[]{1, 2})),
                         "x")));
         assertFalse("Ship is fit in the Board",
                 standardBoard.settleShip(new Ship(
@@ -40,7 +37,7 @@ public class AISettleTests {
     @Test
     public void shipCollosionWithOtherShip() {
         Board standardBoard = new Board(new String[][]{{"A1", "A1"},
-            {" ", " "}});
+        {" ", " "}});
         assertFalse("AI cannot settle ships if other ship in its way",
                 standardBoard.settleShip(new Ship(
                         new ArrayList<>(Arrays
@@ -78,4 +75,29 @@ public class AISettleTests {
                             .get(stepIndex), new int[]{stepIndex * -1, 0}));
         }
     }
+
+    @Test
+    public void settleByOwn() {
+        Board customBoard = new Board(new String[][]{{" "}, {" "}, {" "}});
+        Player Mi = new AI(customBoard);
+        Ship shipToSettle = new Ship(Arrays
+                .asList(new int[]{0, 0}, new int[]{0, 1}, new int[]{0, 2}), "x");
+        Mi.settleShip(shipToSettle);
+        assertEquals("AI try all of the free coordinates with all directions, "
+                + "until it finds a proper one",
+                customBoard.toString(),
+                "x\nx\nx\n");
+        
+        customBoard = new Board(new String[][]{{" ", " ", " "}});
+        Mi = new AI(customBoard);
+        shipToSettle = new Ship(Arrays
+                .asList(new int[]{0, 0}, new int[]{0, 1}, new int[]{0, 2}), "x");
+        Mi.settleShip(shipToSettle);
+        assertEquals("AI try all of the free coordinates with all directions, "
+                + "until it finds a proper one",
+                customBoard.toString(),
+                "xxx\n");
+
+    }
+
 }
